@@ -33,7 +33,9 @@ runs:
       run: |
         set -euo pipefail
         eval "$(ssh-agent -s)"
-        printf '%s' "$SSH_PRIV_KEY" | tr -d '\r' | ssh-add - > /dev/null
+        cat <<EOF | tr -d '\r' | ssh-add - >/dev/null 2>&1
+        $SSH_PRIV_KEY
+        EOF
         echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
         echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
         ssh-add -l 2>&1 > /dev/null
